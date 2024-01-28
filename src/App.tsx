@@ -3,6 +3,12 @@ import { useState } from "react";
 
 import { DataTable } from "@/components/ui/DataTable/DataTable";
 import { columns, TodoType } from "@/components/ui/DataTable/Columns";
+import {
+  Menubar,
+  MenubarMenu,
+  MenubarTrigger,
+  MenubarLabel,
+} from "@/components/ui/menubar";
 
 function App() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -29,7 +35,22 @@ function App() {
 
   return (
     <>
-      <main className="grid grid-flow-col">
+      <Menubar className="w-full flex items-center justify-between p-8">
+        <a href="./">
+          <MenubarLabel className="text-xl cursor-pointer">
+            Planning-app
+          </MenubarLabel>
+        </a>
+
+        <MenubarMenu>
+          <div className="flex">
+            <MenubarTrigger className="cursor-pointer">Sign out</MenubarTrigger>
+            <MenubarTrigger className="cursor-pointer">settings</MenubarTrigger>
+          </div>
+        </MenubarMenu>
+      </Menubar>
+
+      <main className="w-full grid grid-flow-col mt-8">
         <section>
           <DataTable columns={columns} data={todoData} />
         </section>
