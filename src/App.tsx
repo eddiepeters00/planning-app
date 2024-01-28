@@ -64,6 +64,7 @@ function App() {
     id: string;
     priority: 1 | 2 | 3 | 4 | 5;
     title: string;
+    deadline?: Date;
   };
 
   const todoData: TodoType[] = [
@@ -87,6 +88,11 @@ function App() {
     {
       accessorKey: "title",
       header: "Title",
+    },
+    {
+      accessorKey: "deadline",
+      header: "Deadline",
+      cell: () => <p>2024-04-06</p>,
     },
     {
       id: "actions",
@@ -164,8 +170,6 @@ function App() {
         </Drawer>
       ),
       cell: ({ row }) => {
-        const payment = row.original;
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -176,12 +180,8 @@ function App() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                open
-              </DropdownMenuItem>
               <DropdownMenuSeparator />
+              <DropdownMenuItem>Edit</DropdownMenuItem>
               <DropdownMenuItem onClick={() => console.log("Delete")}>
                 Delete
               </DropdownMenuItem>
@@ -190,6 +190,11 @@ function App() {
         );
       },
     },
+  ];
+
+  const deadlines = [
+    { title: "inlämning", date: new Date("24-04-06") },
+    { title: "inlämning", date: new Date("24-04-06") },
   ];
 
   return (
@@ -204,6 +209,7 @@ function App() {
             mode="single"
             selected={date}
             onSelect={setDate}
+            deadlines={deadlines}
             className="rounded-md border w-fit"
           />
         </section>

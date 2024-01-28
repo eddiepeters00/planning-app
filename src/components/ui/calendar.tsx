@@ -1,18 +1,32 @@
-import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { DayPicker } from "react-day-picker";
+import { DayPicker, DayPickerProps } from "react-day-picker";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+type Deadline = {
+  title: string;
+  date: Date;
+};
+
+type ExtendedCalendarProps = DayPickerProps & {
+  deadlines: Deadline[];
+};
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
+  deadlines,
   ...props
-}: CalendarProps) {
+}: ExtendedCalendarProps) {
+  const displayDeadlines = (deadlines: Deadline[]) => {
+    console.log(deadlines);
+  };
+
+  if (deadlines.length) {
+    displayDeadlines(deadlines);
+  }
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
