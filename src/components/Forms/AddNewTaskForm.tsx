@@ -23,7 +23,7 @@ import { Calendar } from "../ui/calendar";
 
 export const AddNewTaskForm = () => {
   const formSchema = z.object({
-    priority: z.number(),
+    priority: z.string(),
     title: z.string().min(2).max(50),
     description: z.string(),
     deadline: z.date(),
@@ -32,22 +32,26 @@ export const AddNewTaskForm = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      priority: 1,
+      priority: "1",
       title: "Title",
       description: "Description",
-      deadline: new Date("2024-04-06"),
+      deadline: new Date(),
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+    const formattedValues = {
+      ...values,
+      deadline: format(values.deadline, "yyyy-MM-dd"),
+    };
+
+    //Add task to db and populate table
+    console.log("Values from form", formattedValues);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 m-6">
         <FormField
           control={form.control}
           name="priority"
@@ -55,7 +59,7 @@ export const AddNewTaskForm = () => {
             <FormItem>
               <FormLabel>Enter priority</FormLabel>
               <FormControl>
-                <Input placeholder="Priority" {...field} />
+                <Input type="number" placeholder="Priority" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,7 +97,7 @@ export const AddNewTaskForm = () => {
           control={form.control}
           name="deadline"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="grid">
               <FormLabel>Enter deadline</FormLabel>
               <FormControl>
                 <Popover>
