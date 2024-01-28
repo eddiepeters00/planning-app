@@ -2,11 +2,12 @@ import { Calendar } from "./components/ui/calendar";
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./components/ui/DataTable/DataTable";
-import { MoreHorizontal, PlusIcon } from "lucide-react";
+import { CalendarIcon, MoreHorizontal, PlusIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "./components/ui/button";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +36,13 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "./components/ui/popover";
+import { cn } from "./lib/utils";
+import { format } from "date-fns";
 
 function App() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -43,6 +51,7 @@ function App() {
     priority: z.number(),
     title: z.string().min(2).max(50),
     description: z.string(),
+    deadline: z.date(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -51,6 +60,7 @@ function App() {
       priority: 1,
       title: "Title",
       description: "Description",
+      deadline: new Date("2024-04-06"),
     },
   });
 
@@ -64,6 +74,7 @@ function App() {
     id: string;
     priority: 1 | 2 | 3 | 4 | 5;
     title: string;
+    description?: string;
     deadline?: Date;
   };
 
@@ -72,11 +83,13 @@ function App() {
       id: "728ed52f",
       priority: 1,
       title: "Very important information",
+      description: "A very important thing i cant forget to do it this week",
     },
     {
       id: "489e1d42",
       priority: 1,
       title: "Shoppinglist",
+      deadline: new Date("2024-04-06"),
     },
   ];
 
@@ -92,7 +105,6 @@ function App() {
     {
       accessorKey: "deadline",
       header: "Deadline",
-      cell: () => <p>2024-04-06</p>,
     },
     {
       id: "actions",
@@ -105,10 +117,10 @@ function App() {
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader className="text-left">
-              <DrawerTitle>Add new item</DrawerTitle>
+              <DrawerTitle>Add new task</DrawerTitle>
               <DrawerDescription>
-                Add the information you want your item to include. Click save
-                when you're done.
+                Add information you want your task to include. Click save when
+                you're done.
               </DrawerDescription>
             </DrawerHeader>
             <Form {...form}>
@@ -157,6 +169,50 @@ function App() {
                   )}
                 />
 
+                <FormField
+                  control={form.control}
+                  name="deadline"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Enter deadline</FormLabel>
+                      <FormControl>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-[240px] pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  format(field.value, "PPP")
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) =>
+                                date > new Date() ||
+                                date < new Date("1900-01-01")
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <Button type="submit">Submit</Button>
               </form>
             </Form>

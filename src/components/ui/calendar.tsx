@@ -10,7 +10,7 @@ type Deadline = {
 };
 
 type ExtendedCalendarProps = DayPickerProps & {
-  deadlines: Deadline[];
+  deadlines?: Deadline[];
 };
 
 function Calendar({
@@ -24,7 +24,7 @@ function Calendar({
     console.log(deadlines);
   };
 
-  if (deadlines.length) {
+  if (deadlines?.length) {
     displayDeadlines(deadlines);
   }
   return (

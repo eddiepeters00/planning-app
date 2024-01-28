@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
                   ))}
                 </TableRow>
 
-                {expandedRowIndex === rowIndex && (
+                {expandedRowIndex === rowIndex && row.original.description && (
                   <TableRow>
                     <TableCell colSpan={table.getVisibleFlatColumns().length}>
                       <div className="relative p-4">
@@ -90,10 +90,7 @@ export function DataTable<TData, TValue>({
                         >
                           X
                         </div>
-                        <p>Expanded row</p>
-                        <p>Expanded row</p>
-                        <p>Expanded row</p>
-                        <p>Expanded row</p>
+                        <p>{row.original.description}</p>
                       </div>
                     </TableCell>
                   </TableRow>
